@@ -42,28 +42,28 @@ case class Radians(value: Double) extends Angular[Radians]
 /**
  * Represent length
  */
-abstract class Length[A: ru.TypeTag] extends NumUnit[A]
+object Length {
+  def apply[A <: Length[A]](b: Length[_])(implicit typeTag: ru.TypeTag[A]): A = {
+    NumUnit(b.value * b.rateToMeters / NumUnit(0).rateToMeters)
+  }
+}
+abstract class Length[A: ru.TypeTag](val rateToMeters: Double) extends NumUnit[A]
 
 object Inch {
-  def apply(m: Meters): Inch = Inch(m.value * 100 / 2.54)
+  val rateToMeters = 2.54e-2
 }
-case class Inch(value: Double) extends Length[Inch]
+case class Inch(value: Double) extends Length[Inch](Inch.rateToMeters)
 object Pixel {
   def apply(dpi: Double)(i: Inch): Pixel = Pixel(i.value * dpi, dpi)
 }
-case class Pixel(value: Double, dpi: Double) extends Length[Pixel] {
+case class Pixel(value: Double, dpi: Double) extends Length[Pixel](Inch.rateToMeters / dpi) {
   override protected def withValue(v: Double) = Pixel(v, dpi)
 }
 
 /**
  * Meter series
  */
-object MeterUnit {
-  def apply[A <: MeterUnit[A]](b: MeterUnit[_])(implicit typeTag: ru.TypeTag[A]): A = {
-    NumUnit(b.value * b.rateToMeters / NumUnit(0).rateToMeters)
-  }
-}
-sealed abstract class MeterUnit[A: ru.TypeTag](val rateToMeters: Double) extends Length[A]
+sealed abstract class MeterUnit[A: ru.TypeTag](override val rateToMeters: Double) extends Length[A](rateToMeters)
 case class Meters(value: Double) extends MeterUnit[Meters](1)
 case class Killometers(value: Double) extends MeterUnit[Killometers](1e+3)
 case class Millimeters(value: Double) extends MeterUnit[Millimeters](1e-3)
