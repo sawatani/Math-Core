@@ -63,8 +63,7 @@ case class Pixel(value: Double, dpi: Double) extends Length[Pixel](Inch.rateToMe
 /**
  * Meter series
  */
-sealed abstract class MeterUnit[A: ru.TypeTag](override val rateToMeters: Double) extends Length[A](rateToMeters)
-case class Meters(value: Double) extends MeterUnit[Meters](1)
-case class Killometers(value: Double) extends MeterUnit[Killometers](1e+3)
-case class Millimeters(value: Double) extends MeterUnit[Millimeters](1e-3)
-case class Nanometers(value: Double) extends MeterUnit[Nanometers](1e-9)
+case class Meters(value: Double) extends Length[Meters](1)
+case class Killometers(value: Double) extends Length[Killometers](1e+3)
+case class Millimeters(value: Double) extends Length[Millimeters](1e-3)
+case class Nanometers(value: Double) extends Length[Nanometers](1e-9)
