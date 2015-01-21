@@ -1,7 +1,5 @@
 package org.fathens
 
-import scala.reflect.runtime.{ universe => ru }
-
 package object math {
   // Angular
   implicit def toRadians(d: Degrees) = Radians(d.value.toRadians)
@@ -14,4 +12,8 @@ package object math {
   implicit def toNanometers(a: Length[_]) = Length[Nanometers](a)
   // Inch
   implicit def toInch(a: Length[_]) = Length[Inch](a)
+
+  implicit class UnitDouble(d: Double) {
+    def *[A <: NumUnit[A]](u: NumUnit[A]): A = u * d
+  }
 }
