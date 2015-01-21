@@ -13,7 +13,7 @@ object NumUnit {
         )(v).asInstanceOf[A]
   }
 }
-abstract class NumUnit[A: ru.TypeTag] {
+abstract class NumUnit[A <: NumUnit[A]](implicit tag: ru.TypeTag[A]) extends Ordered[A] {
   /**
    * Concrete value
    */
@@ -21,7 +21,7 @@ abstract class NumUnit[A: ru.TypeTag] {
   /**
    * Create another instance of given value
    */
-  protected def withValue(v: Double) = NumUnit[A](v)
+  protected[math] def withValue(v: Double) = NumUnit[A](v)
 
   // Basic arithmetic operations
 
@@ -29,12 +29,20 @@ abstract class NumUnit[A: ru.TypeTag] {
   def -(b: NumUnit[A]) = withValue(this.value - b.value)
   def *(b: Double) = withValue(this.value * b)
   def /(b: Double) = withValue(this.value / b)
+
+  def %(b: Double) = withValue(this.value % b)
+  def ^(b: Double) = withValue(scala.math.pow(this.value, b))
+
+  def unary_+ = this
+  def unary_- = withValue(-this.value)
+
+  def compare(b: A) = if (this.value < b.value) -1 else if (this.value > b.value) 1 else 0
 }
 
 /**
  * Represent angular
  */
-abstract class Angular[A: ru.TypeTag] extends NumUnit[A]
+abstract class Angular[A <: NumUnit[A]](implicit tag: ru.TypeTag[A]) extends NumUnit[A]
 
 case class Degrees(value: Double) extends Angular[Degrees]
 case class Radians(value: Double) extends Angular[Radians]
@@ -47,7 +55,7 @@ object Length {
     NumUnit(b.value * b.rateToMeters / NumUnit(0).rateToMeters)
   }
 }
-abstract class Length[A: ru.TypeTag](val rateToMeters: Double) extends NumUnit[A]
+abstract class Length[A <: NumUnit[A]](val rateToMeters: Double)(implicit tag: ru.TypeTag[A]) extends NumUnit[A]
 
 object Inch {
   val rateToMeters = 2.54e-2
@@ -57,7 +65,7 @@ object Pixel {
   def apply(dpi: Double)(i: Inch): Pixel = Pixel(i.value * dpi, dpi)
 }
 case class Pixel(value: Double, dpi: Double) extends Length[Pixel](Inch.rateToMeters / dpi) {
-  override protected def withValue(v: Double) = Pixel(v, dpi)
+  override protected[math] def withValue(v: Double) = Pixel(v, dpi)
 }
 
 /**
