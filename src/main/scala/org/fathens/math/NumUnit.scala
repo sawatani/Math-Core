@@ -42,10 +42,20 @@ abstract class NumUnit[A <: NumUnit[A]](implicit tag: ru.TypeTag[A]) extends Ord
 /**
  * Represent angular
  */
-abstract class Angular[A <: NumUnit[A]](implicit tag: ru.TypeTag[A]) extends NumUnit[A]
+object Angular {
+  def apply[A <: Angular[A]](b: Angular[_])(implicit typeTag: ru.TypeTag[A]): A = {
+    NumUnit(b.value * b.rateToRadians / NumUnit(0).rateToRadians)
+  }
+}
+abstract class Angular[A <: NumUnit[A]](val rateToRadians: Double)(implicit tag: ru.TypeTag[A]) extends NumUnit[A] {
+  override def equals(b: Any) = b match {
+    case b: Angular[_] => (this.value * this.rateToRadians) == (b.value * b.rateToRadians)
+    case _ => false
+  }
+}
 
-case class Degrees(value: Double) extends Angular[Degrees]
-case class Radians(value: Double) extends Angular[Radians]
+case class Degrees(value: Double) extends Angular[Degrees](scala.math.Pi * 2 / 360)
+case class Radians(value: Double) extends Angular[Radians](1)
 
 /**
  * Represent length
@@ -55,7 +65,12 @@ object Length {
     NumUnit(b.value * b.rateToMeters / NumUnit(0).rateToMeters)
   }
 }
-abstract class Length[A <: NumUnit[A]](val rateToMeters: Double)(implicit tag: ru.TypeTag[A]) extends NumUnit[A]
+abstract class Length[A <: NumUnit[A]](val rateToMeters: Double)(implicit tag: ru.TypeTag[A]) extends NumUnit[A] {
+  override def equals(b: Any) = b match {
+    case b: Length[_] => (this.value * this.rateToMeters) == (b.value * b.rateToMeters)
+    case _ => false
+  }
+}
 
 object Inch {
   val rateToMeters = 2.54e-2

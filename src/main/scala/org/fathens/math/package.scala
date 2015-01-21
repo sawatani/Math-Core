@@ -2,8 +2,8 @@ package org.fathens
 
 package object math {
   // Angular
-  implicit def toRadians(d: Degrees) = Radians(d.value.toRadians)
-  implicit def toDegrees(r: Radians) = Degrees(r.value.toDegrees)
+  implicit def toRadians(a: Angular[_]) = Angular[Radians](a)
+  implicit def toDegrees(a: Angular[_]) = Angular[Degrees](a)
 
   // Meter series
   implicit def toMeters(a: Length[_]) = Length[Meters](a)
@@ -33,7 +33,4 @@ package object math {
 
   def min[U <: NumUnit[U]](a: U, b: U): U = if (a <= b) a else b
   def max[U <: NumUnit[U]](a: U, b: U): U = if (a >= b) a else b
-  
-
-  def ss[U <: NumUnit[U]](a: U, b: U): U = if (a != b) a else b
 }
