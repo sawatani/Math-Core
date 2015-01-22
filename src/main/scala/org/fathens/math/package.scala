@@ -1,6 +1,9 @@
 package org.fathens
 
 package object math {
+  val Pi = Radians(scala.math.Pi)
+  val Pi2 = Pi * 2
+  
   // Angular
   implicit def toRadians(a: Angular[_]): Radians = a.convertTo[Radians]
   implicit def toDegrees(a: Angular[_]): Degrees = a.convertTo[Degrees]
