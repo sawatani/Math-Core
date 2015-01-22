@@ -24,6 +24,22 @@ object NumUnitSpec extends Specification with ScalaCheck {
     multiplication                                       $bo03
     division                                             $bo04
 
+  Other operations
+
+    mod                                                  $op01
+    pow                                                  $op02
+    sqrt                                                 $op03
+    cbrt                                                 $op04
+    abs                                                  $op05
+    plus sign                                            $op06
+    minus sign                                           $op07
+    compare                                              $op08
+
+  Convertible
+
+    equals                                               $co01
+    convert                                              $co02
+
   Inch
 
     from milli-meters                                    $ic01
@@ -36,6 +52,11 @@ object NumUnitSpec extends Specification with ScalaCheck {
 
     from inch                                            $px01
     to inch                                              $px02
+
+  Radians
+
+    from degrees                                         $rd01
+    to degrees                                           $rd02
 """
 
   implicit class SignificanceDouble(a: Double) {
@@ -65,6 +86,39 @@ object NumUnitSpec extends Specification with ScalaCheck {
     Degrees(a) / b must_== Degrees(a / b)
   }
 
+  def op01 = prop { (a: Double, b: Double) =>
+    Meters(a) % b must_== Meters(a % b)
+  }
+  def op02 = prop { (a: Double, b: Double) =>
+    Meters(a) ^ b must_== Meters(scala.math.pow(a, b))
+  }
+  def op03 = prop { (a: Double) =>
+    Meters(a).sqrt must_== Meters(scala.math.sqrt(a))
+  }
+  def op04 = prop { (a: Double) =>
+    Meters(a).cbrt must_== Meters(scala.math.cbrt(a))
+  }
+  def op05 = prop { (a: Double) =>
+    Meters(a).abs must_== Meters(scala.math.abs(a))
+  }
+  def op06 = prop { (a: Double) =>
+    +Meters(a) must_== Meters(+a)
+  }
+  def op07 = prop { (a: Double) =>
+    -Meters(a) must_== Meters(-a)
+  }
+  def op08 = prop { (a: Double, b: Double) =>
+    Meters(a) > Meters(b) must_== a > b
+  }
+
+  def co01 = prop { (a: Double) =>
+    Meters(a * 1000) must_== Killometers(a)
+  }
+  def co02 = prop { (v: Double) =>
+    val a = v / 1000
+    (Meters(a * 1000): Killometers).value must_=~ a
+  }
+
   def ic01 = prop { (a: Double) =>
     (Millimeters(a): Inch).value must_=~ a / 25.4
   }
@@ -89,4 +143,11 @@ object NumUnitSpec extends Specification with ScalaCheck {
     val dpi = math.abs(b) / 100.0
     Pixel(a, dpi).toInch.value must_=~ a / dpi
   }.set(minTestsOk = 10000)
+
+  def rd01 = prop { (a: Double) =>
+    (Degrees(a): Radians).value must_=~ a * scala.math.Pi / 180
+  }
+  def rd02 = prop { (a: Double) =>
+    (Radians(a): Degrees).value must_=~ a * 180 / scala.math.Pi
+  }
 }
