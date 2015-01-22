@@ -15,6 +15,10 @@ package object math {
 
   implicit class UnitDouble(d: Double) {
     def *[U <: NumUnit[U]](u: U): U = u * d
+    def ^(b: Double) = scala.math.pow(d, b)
+    def sqrt = scala.math.sqrt(d)
+    def cbrt = scala.math.cbrt(d)
+    def abs = scala.math.abs(d)
   }
 
   // Trigonometric Functions
