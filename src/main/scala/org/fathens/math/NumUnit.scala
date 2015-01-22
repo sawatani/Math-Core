@@ -21,8 +21,6 @@ abstract class NumUnit[A <: NumUnit[A]](implicit tag$: ru.TypeTag[A]) extends Or
   def -(b: A) = withValue(this.value - b.value)
   def *(b: A) = this.value * b.value
   def /(b: A) = this.value / b.value
-  def +(b: Double) = withValue(this.value + b)
-  def -(b: Double) = withValue(this.value - b)
   def *(b: Double) = withValue(this.value * b)
   def /(b: Double) = withValue(this.value / b)
 
