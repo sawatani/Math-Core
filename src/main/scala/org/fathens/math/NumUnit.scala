@@ -5,7 +5,7 @@ import scala.reflect.runtime.{ universe => ru }
 /**
  * Measuring Numeric Unit
  */
-abstract class NumUnit[A <: NumUnit[A]](implicit tag: ru.TypeTag[A]) extends Ordered[A] {
+abstract class NumUnit[A <: NumUnit[A]](implicit tag$: ru.TypeTag[A]) extends Ordered[A] {
   /**
    * Concrete value
    */
@@ -53,12 +53,9 @@ object NumUnit {
   trait Convertible[G <: Convertible[G, _], A <: NumUnit[A]] { self: NumUnit[A] =>
     val rateToStandard: Double
 
-    override def equals(b: Any) = {
-      def comp(a: Double, b: Double) = (a == b) || (a.isNaN && b.isNaN) || (a.isInfinity && b.isInfinity)
-      b match {
-        case b: Convertible[G, _] => comp(this.toStandard, b.toStandard)
-        case _                    => false
-      }
+    override def equals(b: Any) = b match {
+      case b: Convertible[G, _] => Precision.compare(this.toStandard, b.toStandard)
+      case _                    => false
     }
     def convertTo[U <: NumUnit[U]](implicit tag$: ru.TypeTag[U], e$: U <:< Convertible[G, U]): U = {
       NumUnit[U](0).asInstanceOf[Convertible[G, U]].fromStandard(this.toStandard)

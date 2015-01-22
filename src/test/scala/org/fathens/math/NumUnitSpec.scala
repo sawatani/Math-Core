@@ -112,11 +112,10 @@ object NumUnitSpec extends Specification with ScalaCheck {
   }
 
   def co01 = prop { (a: Double) =>
-    Meters(a * 1000) must_== Killometers(a)
+    Radians(a * scala.math.Pi / 180) must_== Degrees(a)
   }
-  def co02 = prop { (v: Double) =>
-    val a = v / 1000
-    (Meters(a * 1000): Killometers).value must_=~ a
+  def co02 = prop { (a: Double) =>
+    (Radians(a): Degrees).value must_=~ a * 180 / scala.math.Pi
   }
 
   def ic01 = prop { (a: Double) =>

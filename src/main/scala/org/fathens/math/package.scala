@@ -29,4 +29,6 @@ package object math {
   // Camparations
   def min[U <: NumUnit[U]](a: U, b: U): U = if (a <= b) a else b
   def max[U <: NumUnit[U]](a: U, b: U): U = if (a >= b) a else b
+
+  implicit val precision = Precision.SignificantFigures(10)
 }
