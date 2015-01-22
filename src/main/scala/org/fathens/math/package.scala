@@ -2,16 +2,16 @@ package org.fathens
 
 package object math {
   // Angular
-  implicit def toRadians(a: Angular[_]): Radians = Angular[Radians](a)
-  implicit def toDegrees(a: Angular[_]): Degrees = Angular[Degrees](a)
+  implicit def toRadians(a: Angular[_]): Radians = a.convertTo[Radians]
+  implicit def toDegrees(a: Angular[_]): Degrees = a.convertTo[Degrees]
 
   // Meter series
-  implicit def toMeters(a: Length[_]): Meters = Length[Meters](a)
-  implicit def toKillometers(a: Length[_]): Killometers = Length[Killometers](a)
-  implicit def toMillimeters(a: Length[_]): Millimeters = Length[Millimeters](a)
-  implicit def toNanometers(a: Length[_]): Nanometers = Length[Nanometers](a)
+  implicit def toMeters(a: LengthMeasure[_]): Meters = a.convertTo[Meters]
+  implicit def toKillometers(a: LengthMeasure[_]): Killometers = a.convertTo[Killometers]
+  implicit def toMillimeters(a: LengthMeasure[_]): Millimeters = a.convertTo[Millimeters]
+  implicit def toNanometers(a: LengthMeasure[_]): Nanometers = a.convertTo[Nanometers]
   // Inch
-  implicit def toInch(a: Length[_]): Inch = Length[Inch](a)
+  implicit def toInch(a: LengthMeasure[_]): Inch = a.convertTo[Inch]
 
   implicit class UnitDouble(d: Double) {
     def *[U <: NumUnit[U]](u: U): U = u * d
@@ -26,11 +26,7 @@ package object math {
   def atan(v: Double): Radians = Radians(scala.math.atan(v))
   def atan2(x: Double, y: Double): Radians = Radians(scala.math.atan2(x, y))
 
-  // Calculations
-  def sqrt[U <: NumUnit[U]](u: U): U = u withValue scala.math.sqrt(u.value)
-  def cbrt[U <: NumUnit[U]](u: U): U = u withValue scala.math.cbrt(u.value)
-  def abs[U <: NumUnit[U]](u: U): U = u withValue scala.math.abs(u.value)
-
+  // Camparations
   def min[U <: NumUnit[U]](a: U, b: U): U = if (a <= b) a else b
   def max[U <: NumUnit[U]](a: U, b: U): U = if (a >= b) a else b
 }

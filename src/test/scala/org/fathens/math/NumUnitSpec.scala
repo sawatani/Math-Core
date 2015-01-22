@@ -87,6 +87,6 @@ object NumUnitSpec extends Specification with ScalaCheck {
   }.set(minTestsOk = 10000)
   def px02 = prop { (a: Double, b: Int) =>
     val dpi = math.abs(b) / 100.0
-    (Pixel(a, dpi): Inch).value must_=~ a / dpi
+    Pixel(a, dpi).toInch.value must_=~ a / dpi
   }.set(minTestsOk = 10000)
 }
