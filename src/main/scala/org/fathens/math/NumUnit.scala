@@ -71,8 +71,9 @@ object NumUnit {
 /**
  * Represent angular
  */
-abstract class Angular[A <: Angular[A]](val rateToStandard: Double)(implicit tag$: ru.TypeTag[A]) extends NumUnit[A] with NumUnit.Convertible[Angular[_], A]
-
+abstract class Angular[A <: Angular[A]](val rateToStandard: Double)(implicit tag$: ru.TypeTag[A]) extends NumUnit[A] with NumUnit.Convertible[Angular[_], A] {
+  def normalize = (this % Pi2 + Pi2) % Pi2
+}
 case class Degrees(value: Double) extends Angular[Degrees](scala.math.Pi * 2 / 360)
 case class Radians(value: Double) extends Angular[Radians](1)
 
