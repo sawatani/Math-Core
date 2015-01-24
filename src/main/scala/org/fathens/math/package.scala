@@ -1,7 +1,9 @@
 package org.fathens
 
 package object math {
-  val Pi = Radians(scala.math.Pi)
+  implicit def toSignificantFigures(v: Int) = Precision.SignificantFigures(v)
+  
+  val Pi = Radians(scala.math.Pi)(16)
   val Pi2 = Pi * 2
   
   // Angular
@@ -28,14 +30,12 @@ package object math {
   def sin(θ: Radians): Double = scala.math.sin(θ.value)
   def cos(θ: Radians): Double = scala.math.cos(θ.value)
   def tan(θ: Radians): Double = scala.math.tan(θ.value)
-  def asin(v: Double): Radians = Radians(scala.math.asin(v))
-  def acos(v: Double): Radians = Radians(scala.math.acos(v))
-  def atan(v: Double): Radians = Radians(scala.math.atan(v))
-  def atan2(x: Double, y: Double): Radians = Radians(scala.math.atan2(x, y))
+  def asin(v: Double): Radians = Radians(scala.math.asin(v))(Pi.precision)
+  def acos(v: Double): Radians = Radians(scala.math.acos(v))(Pi.precision)
+  def atan(v: Double): Radians = Radians(scala.math.atan(v))(Pi.precision)
+  def atan2(x: Double, y: Double): Radians = Radians(scala.math.atan2(x, y))(Pi.precision)
 
   // Camparations
   def min[U <: NumUnit[U]](a: U, b: U): U = if (a <= b) a else b
   def max[U <: NumUnit[U]](a: U, b: U): U = if (a >= b) a else b
-
-  implicit val precision = Precision.SignificantFigures(10)
 }

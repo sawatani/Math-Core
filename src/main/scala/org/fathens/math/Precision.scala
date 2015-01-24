@@ -7,6 +7,8 @@ object Precision {
   case class SignificantFigures(digit: Int) {
     def apply(v: Double) = BigDecimal(v, new java.math.MathContext(digit))
     def compare(a: Double, b: Double) = this(a) == this(b)
+    
+    def vs(b: SignificantFigures) = SignificantFigures(scala.math.min(this.digit, b.digit))
   }
 
   def compare(a: Double, b: Double)(implicit psf$: SignificantFigures) = {

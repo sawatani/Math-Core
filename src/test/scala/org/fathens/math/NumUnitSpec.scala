@@ -70,6 +70,7 @@ object NumUnitSpec extends Specification with ScalaCheck {
     def must_=~(b: Double)(implicit s: SignificantFigures) = a must beCloseTo(b within s)
   }
   implicit val significance = SignificantFigures(10)
+  implicit val precision = Precision.SignificantFigures(significance.number)
 
   def vc01 = prop { (a: Double) => Degrees(a).value must_== a }
   def vc02 = prop { (a: Double) => Radians(a).value must_== a }

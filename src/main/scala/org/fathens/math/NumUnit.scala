@@ -6,6 +6,7 @@ import scala.reflect.runtime.{ universe => ru }
  * Measuring Numeric Unit
  */
 abstract class NumUnit[A <: NumUnit[A]](implicit tag$: ru.TypeTag[A]) extends Ordered[A] {
+  implicit val precision: Precision.SignificantFigures
   /**
    * Concrete value
    */
@@ -13,18 +14,18 @@ abstract class NumUnit[A <: NumUnit[A]](implicit tag$: ru.TypeTag[A]) extends Or
   /**
    * Create another instance of given value
    */
-  protected def withValue(v: Double) = NumUnit[A](v)
+  protected def withValue(v: Double)(implicit psf$: Precision.SignificantFigures) = NumUnit[A](v)(tag$, psf$)
 
   // Basic arithmetic operations
 
-  def +(b: A) = withValue(this.value + b.value)
-  def -(b: A) = withValue(this.value - b.value)
+  def +(b: A) = withValue(this.value + b.value)(this.precision vs b.precision)
+  def -(b: A) = withValue(this.value - b.value)(this.precision vs b.precision)
   def *(b: A) = this.value * b.value
   def /(b: A) = this.value / b.value
   def *(b: Double) = withValue(this.value * b)
   def /(b: Double) = withValue(this.value / b)
 
-  def %(b: A) = withValue(this.value % b.value)
+  def %(b: A) = withValue(this.value % b.value)(this.precision vs b.precision)
   def %(b: Double) = withValue(this.value % b)
   def ^(b: Double) = withValue(scala.math.pow(this.value, b))
 
@@ -36,19 +37,30 @@ abstract class NumUnit[A <: NumUnit[A]](implicit tag$: ru.TypeTag[A]) extends Or
   def unary_- = withValue(-this.value)
 
   def compare(b: A) = if (this.value < b.value) -1 else if (this.value > b.value) 1 else 0
+
+  override def equals(b: Any) = b match {
+    case b: NumUnit[A] => Precision.compare(this.value, b.value)
+    case _             => false
+  }
+  
+  override def toString = {
+    val name = getClass.getName.split('.').reverse.head
+    val digit = precision(value)
+    f"${name}(${digit})"
+  }
 }
 object NumUnit {
   /**
    * Create new instance of given type and value
    */
-  private def apply[U: ru.TypeTag](v: Double): U = {
+  private def apply[U: ru.TypeTag](v: Double)(implicit psf$: Precision.SignificantFigures): U = {
     val typeA = ru.typeOf[U]
     ru.runtimeMirror(getClass.getClassLoader)
       .reflectClass(
         typeA.typeSymbol.asClass
       ).reflectConstructor(
           typeA.decl(ru.termNames.CONSTRUCTOR).asMethod
-        )(v).asInstanceOf[U]
+        )(v, psf$).asInstanceOf[U]
   }
   /**
    * Grouping trait of convertible each other
@@ -74,8 +86,8 @@ object NumUnit {
 abstract class Angular[A <: Angular[A]](val rateToStandard: Double)(implicit tag$: ru.TypeTag[A]) extends NumUnit[A] with NumUnit.Convertible[Angular[_], A] {
   def normalize = (this % Pi2 + Pi2) % Pi2
 }
-case class Degrees(value: Double) extends Angular[Degrees](scala.math.Pi * 2 / 360)
-case class Radians(value: Double) extends Angular[Radians](1)
+case class Degrees(value: Double)(implicit val precision: Precision.SignificantFigures) extends Angular[Degrees](scala.math.Pi * 2 / 360)
+case class Radians(value: Double)(implicit val precision: Precision.SignificantFigures) extends Angular[Radians](1)
 
 /**
  * Represent length
@@ -83,21 +95,21 @@ case class Radians(value: Double) extends Angular[Radians](1)
 abstract class Length[A <: Length[A]](implicit tag$: ru.TypeTag[A]) extends NumUnit[A]
 
 object Pixel {
-  def apply(dpi: Double)(i: Inch): Pixel = Pixel(i.value * dpi, dpi)
+  def apply(dpi: Double)(i: Inch)(implicit psf$: Precision.SignificantFigures): Pixel = Pixel(i.value * dpi, dpi)
 }
-case class Pixel(value: Double, dpi: Double) extends NumUnit[Pixel] {
-  override protected def withValue(v: Double) = Pixel(v, dpi)
+case class Pixel(value: Double, dpi: Double)(implicit val precision: Precision.SignificantFigures) extends NumUnit[Pixel] {
+  override protected def withValue(v: Double)(implicit psf$: Precision.SignificantFigures) = Pixel(v, dpi)(psf$)
   def toInch = Inch(value / dpi)
 }
 
 abstract class LengthMeasure[A <: LengthMeasure[A]](val rateToStandard: Double)(implicit tag$: ru.TypeTag[A]) extends Length[A] with NumUnit.Convertible[LengthMeasure[_], A]
 
-case class Inch(value: Double) extends LengthMeasure[Inch](2.54e-2)
+case class Inch(value: Double)(implicit val precision: Precision.SignificantFigures) extends LengthMeasure[Inch](2.54e-2)
 
 /**
  * Meter series
  */
-case class Meters(value: Double) extends LengthMeasure[Meters](1)
-case class Killometers(value: Double) extends LengthMeasure[Killometers](1e+3)
-case class Millimeters(value: Double) extends LengthMeasure[Millimeters](1e-3)
-case class Nanometers(value: Double) extends LengthMeasure[Nanometers](1e-9)
+case class Meters(value: Double)(implicit val precision: Precision.SignificantFigures) extends LengthMeasure[Meters](1)
+case class Killometers(value: Double)(implicit val precision: Precision.SignificantFigures) extends LengthMeasure[Killometers](1e+3)
+case class Millimeters(value: Double)(implicit val precision: Precision.SignificantFigures) extends LengthMeasure[Millimeters](1e-3)
+case class Nanometers(value: Double)(implicit val precision: Precision.SignificantFigures) extends LengthMeasure[Nanometers](1e-9)
