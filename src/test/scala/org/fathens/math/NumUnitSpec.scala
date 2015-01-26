@@ -57,6 +57,13 @@ object NumUnitSpec extends Specification with ScalaCheck {
 
     from degrees                                         $rd01
     to degrees                                           $rd02
+
+  Normalize angulars
+
+    always inside 0 - 2π                                 $fa01
+    0-2π    => it self                                   $fa02
+    over 2π => decrease 2π            　                 $fa03
+    under 0 => increase 2π              　               $fa04
 """
 
   implicit class SignificanceDouble(a: Double) {
@@ -148,5 +155,17 @@ object NumUnitSpec extends Specification with ScalaCheck {
   }
   def rd02 = prop { (a: Double) =>
     (Radians(a): Degrees).value must_=~ a * 180 / scala.math.Pi
+  }
+  def fa01 = prop { (d: Double) =>
+    Radians(d).normalize.value must beBetween(0.0, 2 * Pi.value).excludingEnd
+  }
+  def fa02 = Prop.forAll(Gen.choose(0.0, 2 * math.Pi - 0.00001)) { (d: Double) =>
+    Radians(d).normalize.value must_=~ d
+  }
+  def fa03 = Prop.forAll(Gen.choose(0.0, 2 * math.Pi - 0.00001)) { (d: Double) =>
+    (Pi2 + Radians(d)).normalize.value must_=~ d
+  }
+  def fa04 = Prop.forAll(Gen.choose(0.0, 2 * math.Pi - 0.00001)) { (d: Double) =>
+    (-Pi2 + Radians(d)).normalize.value must_=~ d
   }
 }
