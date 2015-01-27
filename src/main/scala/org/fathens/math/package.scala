@@ -25,9 +25,9 @@ package object math {
   }
 
   // Trigonometric Functions
-  def sin(θ: Radians): Double = scala.math.sin(θ.value)
-  def cos(θ: Radians): Double = scala.math.cos(θ.value)
-  def tan(θ: Radians): Double = scala.math.tan(θ.value)
+  def sin(θ: Radians): Double = scala.math.sin(θ.toDouble)
+  def cos(θ: Radians): Double = scala.math.cos(θ.toDouble)
+  def tan(θ: Radians): Double = scala.math.tan(θ.toDouble)
   def asin(v: Double): Radians = Radians(scala.math.asin(v))
   def acos(v: Double): Radians = Radians(scala.math.acos(v))
   def atan(v: Double): Radians = Radians(scala.math.atan(v))

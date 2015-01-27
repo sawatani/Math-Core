@@ -71,14 +71,14 @@ object NumUnitSpec extends Specification with ScalaCheck {
   }
   implicit val significance = SignificantFigures(10)
 
-  def vc01 = prop { (a: Double) => Degrees(a).value must_== a }
-  def vc02 = prop { (a: Double) => Radians(a).value must_== a }
-  def vc03 = prop { (a: Double) => Meters(a).value must_== a }
-  def vc04 = prop { (a: Double) => Millimeters(a).value must_== a }
-  def vc05 = prop { (a: Double) => Killometers(a).value must_== a }
-  def vc06 = prop { (a: Double) => Nanometers(a).value must_== a }
-  def vc07 = prop { (a: Double) => Inch(a).value must_== a }
-  def vc08 = prop { (a: Double, dpi: Double) => Pixel(a, dpi).value must_== a }
+  def vc01 = prop { (a: Double) => Degrees(a).toDouble must_== a }
+  def vc02 = prop { (a: Double) => Radians(a).toDouble must_== a }
+  def vc03 = prop { (a: Double) => Meters(a).toDouble must_== a }
+  def vc04 = prop { (a: Double) => Millimeters(a).toDouble must_== a }
+  def vc05 = prop { (a: Double) => Killometers(a).toDouble must_== a }
+  def vc06 = prop { (a: Double) => Nanometers(a).toDouble must_== a }
+  def vc07 = prop { (a: Double) => Inch(a).toDouble must_== a }
+  def vc08 = prop { (a: Double, dpi: Double) => Pixel(a, dpi).toDouble must_== a }
 
   def bo01 = prop { (a: Double, b: Double) =>
     Degrees(a) + Degrees(b) must_== Degrees(a + b)
@@ -122,50 +122,50 @@ object NumUnitSpec extends Specification with ScalaCheck {
     Radians(a * scala.math.Pi / 180) must_== Degrees(a)
   }
   def co02 = prop { (a: Double) =>
-    (Radians(a): Degrees).value must_=~ a * 180 / scala.math.Pi
+    (Radians(a): Degrees).toDouble must_=~ a * 180 / scala.math.Pi
   }
 
   def ic01 = prop { (a: Double) =>
-    (Millimeters(a): Inch).value must_=~ a / 25.4
+    (Millimeters(a): Inch).toDouble must_=~ a / 25.4
   }
   def ic02 = prop { (a: Double) =>
-    (Inch(a): Millimeters).value must_=~ a * 25.4
+    (Inch(a): Millimeters).toDouble must_=~ a * 25.4
   }
   def ic03 = prop { (a: Double) =>
-    (Inch(a): Nanometers).value must_=~ a * 25.4 * 1e+6
+    (Inch(a): Nanometers).toDouble must_=~ a * 25.4 * 1e+6
   }
   def ic04 = prop { (a: Double) =>
-    (Inch(a): Meters).value must_=~ a * 25.4 * 1e-3
+    (Inch(a): Meters).toDouble must_=~ a * 25.4 * 1e-3
   }
   def ic05 = prop { (a: Double) =>
-    (Inch(a): Killometers).value must_=~ a * 25.4 * 1e-6
+    (Inch(a): Killometers).toDouble must_=~ a * 25.4 * 1e-6
   }
 
   def px01 = prop { (a: Double, b: Int) =>
     val dpi = math.abs(b) / 100.0
-    Pixel(dpi)(Inch(a)).value must_=~ a * dpi
+    Pixel(dpi)(Inch(a)).toDouble must_=~ a * dpi
   }.set(minTestsOk = 10000)
   def px02 = prop { (a: Double, b: Int) =>
     val dpi = math.abs(b) / 100.0
-    Pixel(a, dpi).toInch.value must_=~ a / dpi
+    Pixel(a, dpi).toInch.toDouble must_=~ a / dpi
   }.set(minTestsOk = 10000)
 
   def rd01 = prop { (a: Double) =>
-    (Degrees(a): Radians).value must_=~ a * scala.math.Pi / 180
+    (Degrees(a): Radians).toDouble must_=~ a * scala.math.Pi / 180
   }
   def rd02 = prop { (a: Double) =>
-    (Radians(a): Degrees).value must_=~ a * 180 / scala.math.Pi
+    (Radians(a): Degrees).toDouble must_=~ a * 180 / scala.math.Pi
   }
   def fa01 = prop { (d: Double) =>
-    Radians(d).normalize.value must beBetween(0.0, 2 * Pi.value).excludingEnd
+    Radians(d).normalize.toDouble must beBetween(0.0, 2 * Pi.toDouble).excludingEnd
   }
   def fa02 = Prop.forAll(Gen.choose(0.0, 2 * math.Pi - 0.00001)) { (d: Double) =>
-    Radians(d).normalize.value must_=~ d
+    Radians(d).normalize.toDouble must_=~ d
   }
   def fa03 = Prop.forAll(Gen.choose(0.0, 2 * math.Pi - 0.00001)) { (d: Double) =>
-    (Pi2 + Radians(d)).normalize.value must_=~ d
+    (Pi2 + Radians(d)).normalize.toDouble must_=~ d
   }
   def fa04 = Prop.forAll(Gen.choose(0.0, 2 * math.Pi - 0.00001)) { (d: Double) =>
-    (-Pi2 + Radians(d)).normalize.value must_=~ d
+    (-Pi2 + Radians(d)).normalize.toDouble must_=~ d
   }
 }
