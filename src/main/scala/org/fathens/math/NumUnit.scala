@@ -9,7 +9,13 @@ abstract class NumUnit[A <: NumUnit[A]](implicit tag$: ru.TypeTag[A]) extends Or
   /**
    * Concrete value
    */
-  val value: Double
+  protected val value: Double
+  
+  def toInt: Int = value.toInt
+  def toLong: Long = value.toLong
+  def toDouble: Double = value
+  def toBigDecimal: BigDecimal = BigDecimal(value)
+  
   /**
    * Create another instance of given value
    */
