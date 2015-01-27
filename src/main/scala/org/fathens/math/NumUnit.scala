@@ -80,8 +80,8 @@ object NumUnit {
 abstract class Angular[A <: Angular[A]](val rateToStandard: Double)(implicit tag$: ru.TypeTag[A]) extends NumUnit[A] with NumUnit.Convertible[Angular[_], A] {
   def normalize = (this % Pi2 + Pi2) % Pi2
 }
-case class Degrees(value: Double) extends Angular[Degrees](scala.math.Pi * 2 / 360)
-case class Radians(value: Double) extends Angular[Radians](1)
+case class Degrees(protected val value: Double) extends Angular[Degrees](scala.math.Pi * 2 / 360)
+case class Radians(protected val value: Double) extends Angular[Radians](1)
 
 /**
  * Represent length
@@ -89,21 +89,21 @@ case class Radians(value: Double) extends Angular[Radians](1)
 abstract class Length[A <: Length[A]](implicit tag$: ru.TypeTag[A]) extends NumUnit[A]
 
 object Pixel {
-  def apply(dpi: Double)(i: Inch): Pixel = Pixel(i.value * dpi, dpi)
+  def apply(dpi: Double)(i: Inch): Pixel = Pixel(i.toDouble * dpi, dpi)
 }
-case class Pixel(value: Double, dpi: Double) extends NumUnit[Pixel] {
+case class Pixel(protected val value: Double, dpi: Double) extends NumUnit[Pixel] {
   override protected def withValue(v: Double) = Pixel(v, dpi)
   def toInch = Inch(value / dpi)
 }
 
 abstract class LengthMeasure[A <: LengthMeasure[A]](val rateToStandard: Double)(implicit tag$: ru.TypeTag[A]) extends Length[A] with NumUnit.Convertible[LengthMeasure[_], A]
 
-case class Inch(value: Double) extends LengthMeasure[Inch](2.54e-2)
+case class Inch(protected val value: Double) extends LengthMeasure[Inch](2.54e-2)
 
 /**
  * Meter series
  */
-case class Meters(value: Double) extends LengthMeasure[Meters](1)
-case class Killometers(value: Double) extends LengthMeasure[Killometers](1e+3)
-case class Millimeters(value: Double) extends LengthMeasure[Millimeters](1e-3)
-case class Nanometers(value: Double) extends LengthMeasure[Nanometers](1e-9)
+case class Meters(protected val value: Double) extends LengthMeasure[Meters](1)
+case class Killometers(protected val value: Double) extends LengthMeasure[Killometers](1e+3)
+case class Millimeters(protected val value: Double) extends LengthMeasure[Millimeters](1e-3)
+case class Nanometers(protected val value: Double) extends LengthMeasure[Nanometers](1e-9)
