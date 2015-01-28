@@ -2,7 +2,7 @@ name := "math-core"
 
 organization := "org.fathens"
 
-version := "0.1.2"
+version := "0.1.3-SNAPSHOT"
 
 scalaVersion := "2.11.5"
 
