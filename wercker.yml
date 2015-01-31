@@ -3,7 +3,8 @@ build:
     steps:
         - script:
             name: test
-            code: bundle exec sbt test
+            code: |-
+                sbt test
 deploy:
     steps:
         - sawatani/maven_central@0.1.0:
