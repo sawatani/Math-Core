@@ -1,15 +1,16 @@
 box: takebayashi/sbt@0.13.6-0.0.1
 build:
-  steps:
-    - script:
-      code: bundle exec sbt test
+    steps:
+        - script:
+            name: test
+            code: bundle exec sbt test
 deploy:
-  steps:
-    - sawatani/maven_central@0.1.0
-      license-name: "MIT License"
-      license-url: http://www.opensource.org/licenses/mit-license.php
-      scm-url: git@github.com:sawatani/Astronomy.git
-      scm-connection: scm:git:git@github.com:sawatani/Astronomy.git
-      developer-id: sawatani
-      developer-name: Kunio Sawatani
-      developer-url: https://github.com/sawatani
+    steps:
+        - sawatani/maven_central@0.1.0:
+            license-name: MIT License
+            license-url: http://www.opensource.org/licenses/mit-license.php
+            scm-url: git@github.com:sawatani/Astronomy.git
+            scm-connection: scm:git:git@github.com:sawatani/Astronomy.git
+            developer-id: sawatani
+            developer-name: Kunio Sawatani
+            developer-url: https://github.com/sawatani
