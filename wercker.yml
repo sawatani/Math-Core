@@ -10,8 +10,8 @@ deploy:
         - sawatani/maven_central@0.1.1:
             license-name: MIT License
             license-url: http://www.opensource.org/licenses/mit-license.php
-            scm-url: git@github.com:sawatani/Astronomy.git
-            scm-connection: scm:git:git@github.com:sawatani/Astronomy.git
+            scm-url: git@github.com:sawatani/Math.git
+            scm-connection: scm:git:git@github.com:sawatani/Math.git
             developer-id: sawatani
             developer-name: Kunio Sawatani
             developer-url: https://github.com/sawatani
