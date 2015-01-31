@@ -1,0 +1,7 @@
+box: takebayashi/sbt@0.13.6-0.0.1
+build:
+  steps:
+    - script:
+      code: bundle exec sbt test
+steps:
+  - sawatani/maven_central@0.1.0
