@@ -1,4 +1,4 @@
-box: takebayashi/sbt@0.13.6-0.0.1
+box: sawatani/sbt_java8@0.1.0
 build:
     steps:
         - script:
