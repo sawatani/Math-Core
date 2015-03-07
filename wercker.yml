@@ -1,4 +1,4 @@
-box: takebayashi/sbt@0.13.6-0.0.1
+box: sawatani/SBT_OpenJDK7
 build:
     steps:
         - script:
@@ -7,11 +7,8 @@ build:
                 sbt test
 deploy:
     steps:
-        - sawatani/maven_central@0.1.1:
-            license-name: MIT License
-            license-url: http://www.opensource.org/licenses/mit-license.php
-            scm-url: git@github.com:sawatani/Math.git
-            scm-connection: scm:git:git@github.com:sawatani/Math.git
-            developer-id: sawatani
-            developer-name: Kunio Sawatani
-            developer-url: https://github.com/sawatani
+        - sawatani/maven_central:
+            pgp-secring: $SECRING_BASE64
+            pgp-passphrase: $PGP_PASSPHRASE
+            repository-username: $REPOSITORY_USERNAME
+            repository-password: $REPOSITORY_PASSWORD
