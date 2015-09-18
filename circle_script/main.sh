@@ -1,7 +1,8 @@
 #!/bin/sh
 set -eu
 
-. $(dirname $0)/setup
+pwd
+. $(dirname $0)/setup.sh
 
 pomExtra="
   <url>${MAVEN_CENTRAL_PROJECT_URL}</url>
