@@ -3,5 +3,9 @@ machine:
     version: oraclejdk8
 
 dependencies:
-  pre:
+  cache_directories:
+    - ~/.sbt
+
+deployment:
+  override:
     - /bin/bash circle_script/main.sh
