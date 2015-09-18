@@ -16,6 +16,6 @@ scalacOptions ++= Seq(
 scalacOptions in Test ++= Seq("-Yrangepos")
 
 libraryDependencies ++= Seq(
-  Def.setting { "org.scala-lang" % "scala-reflect" % scalaVersion.value }.value,
+  "org.scala-lang" % "scala-reflect" % scalaVersion.value,
   "org.specs2" %% "specs2-scalacheck" % "2.4.15" % "test"
 )
