@@ -1,0 +1,9 @@
+machine:
+  java:
+    version: oraclejdk8
+
+deployment:
+  maven_central:
+    branch: [develop, master]
+    commands:
+      - /bin/bash circle_script/main.sh
