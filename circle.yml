@@ -4,6 +4,6 @@ machine:
 
 deployment:
   maven_central:
-    branch: [develop, master, feature/.*]
+    branch: [develop, master, /feature\/.*/]
     commands:
       - /bin/bash circle_script/main.sh
