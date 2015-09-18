@@ -2,10 +2,6 @@ machine:
   java:
     version: oraclejdk8
 
-dependencies:
-  cache_directories:
-    - ~/.sbt
-
-test:
-  post:
+deployment:
+  maven_central:
     - /bin/bash circle_script/main.sh
