@@ -15,7 +15,7 @@ scalacOptions ++= Seq(
 
 scalacOptions in Test ++= Seq("-Yrangepos")
 
-val reflectDep = Def.setting { "org.scala-lang" % "scala-reflect" % scalaVersion.value }
+reflectDep = Def.setting { "org.scala-lang" % "scala-reflect" % scalaVersion.value }
 
 libraryDependencies ++= Seq(
   reflectDep.value,
